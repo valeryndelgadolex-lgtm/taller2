@@ -74,13 +74,46 @@ public class MiLista implements ListInterface{
 
     @Override
     public boolean insert(ListNode node, Object object) {
+        ListNode nuevanodo = new ListNode(object);
+        ListNode iterador = this.cabeza;
+        if (node == this.cabeza) {
+            nuevanodo.siguiente = this.cabeza;
+            this.cabeza = nuevanodo;
 
-
+            return true;
+        }
+        while (iterador != null) {
+            if (iterador.siguiente == node) {
+                nuevanodo.siguiente = node;
+                iterador.siguiente = nuevanodo;
+                return true;
+            }
+            iterador = iterador.siguiente;
+        }
         return false;
     }
-
     @Override
     public boolean insert(Object ob, Object object) {
+        if (this.cabeza == null) {
+            return false;
+        }
+        ListNode anterior = this.cabeza;
+        ListNode iterador = this.cabeza.siguiente;
+        ListNode nuevanodo = new ListNode(object);
+        if (anterior.dato.equals(ob)) {
+            nuevanodo.siguiente = anterior.siguiente;
+            anterior.siguiente = nuevanodo;
+            return true;
+        }
+        while (iterador != null) {
+            if (anterior.dato.equals(ob)) {
+                nuevanodo.siguiente = iterador;
+                anterior.siguiente = nuevanodo;
+                return true;
+            }
+            anterior = anterior.siguiente;
+            iterador = iterador.siguiente;
+        }
         return false;
     }
 
@@ -120,27 +153,86 @@ public class MiLista implements ListInterface{
 
     @Override
     public boolean set(ListNode node, Object object) {
-        return false;
-    }
+            ListNode iterador = this.cabeza;
+            while (iterador != null) {
+                if (iterador==node){
+                    iterador.dato=object;
+                    return true;
+                }
+                iterador = iterador.siguiente;
+            }
+            return false;
+        }
+
 
     @Override
     public boolean remove(ListNode node) {
+
+        if (this.cabeza == null) {
+            return false;
+        }
+
+        if (this.cabeza == node) {
+            this.cabeza = this.cabeza.siguiente;
+            return true;
+        }
+
+        ListNode anterior = this.cabeza;
+        ListNode iterador = this.cabeza.siguiente;
+
+        while (iterador != null) {
+
+            if (iterador == node) {
+                anterior.siguiente = iterador.siguiente;
+                return true;
+            }
+
+            anterior = anterior.siguiente;
+            iterador = iterador.siguiente;
+        }
+
         return false;
     }
 
+
     @Override
     public boolean contains(Object object) {
+        ListNode iterador = this.cabeza;while (iterador != null) {
+            if (iterador.dato.equals(object)){
+                return true;
+            }
+            iterador = iterador.siguiente;
+        }
+
         return false;
     }
 
     @Override
     public Iterator<ListNode> iterator() {
+
         return null;
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        ListNode iterador = this.cabeza;
+        int indice = 0;
+        while (iterador != null) {
+            indice = indice + 1;
+            iterador= iterador.siguiente;
+
+        }
+        Object[] array = new Object[indice];
+        iterador = this.cabeza;
+        int indicedos = 0;
+
+        while ( iterador != null) {
+            array[indicedos] =  iterador.dato;
+            indicedos= indicedos+1;
+            iterador = iterador.siguiente;
+        }
+
+        return array;
     }
 
     @Override
