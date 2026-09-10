@@ -5,19 +5,21 @@ public class MiLista implements ListInterface {
 
     @Override
     public boolean isEmpty() {
+
         return this.cabeza == null;
     }
 
     @Override
     public int getSize() {
         ListNode iterador = this.cabeza;
-        int contador = 1;
-        while (iterador.siguiente != null) {
-            iterador = iterador.siguiente;
+        int contador = 0;
+        while (iterador != null) {
             contador = contador + 1;
+            iterador = iterador.siguiente;
         }
         return contador;
     }
+
 
     @Override
     public void clear() {
@@ -27,19 +29,26 @@ public class MiLista implements ListInterface {
 
     @Override
     public Object getHead() {
+        if (cabeza == null) {
+            return null;
+        }
         return cabeza.dato;
+
     }
 
 
     @Override
     public Object getTail() {
+        if (this.cabeza == null) {
+            return null;
+        }
         ListNode iterador = this.cabeza;
         while (iterador.siguiente != null) {
             iterador = iterador.siguiente;
         }
-
         return iterador.dato;
     }
+
 
     @Override
     public Object get(ListNode node) {
@@ -92,29 +101,26 @@ public class MiLista implements ListInterface {
         }
         return false;
     }
-
     @Override
     public boolean insert(Object ob, Object object) {
         if (this.cabeza == null) {
             return false;
         }
+
         ListNode anterior = this.cabeza;
-        ListNode iterador = this.cabeza.siguiente;
         ListNode nuevanodo = new ListNode(object);
-        if (anterior.dato.equals(ob)) {
-            nuevanodo.siguiente = anterior.siguiente;
-            anterior.siguiente = nuevanodo;
-            return true;
-        }
-        while (iterador != null) {
+
+        while (anterior != null) {
+
             if (anterior.dato.equals(ob)) {
-                nuevanodo.siguiente = iterador;
+                nuevanodo.siguiente = anterior.siguiente;
                 anterior.siguiente = nuevanodo;
                 return true;
             }
+
             anterior = anterior.siguiente;
-            iterador = iterador.siguiente;
         }
+
         return false;
     }
 
@@ -237,6 +243,7 @@ public class MiLista implements ListInterface {
         return array;
     }
 
+
     @Override
     public Object[] toArray(Object[] object) {
         ListNode iterador = this.cabeza;
@@ -244,42 +251,33 @@ public class MiLista implements ListInterface {
         while (iterador != null) {
             indice = indice + 1;
             iterador = iterador.siguiente;
-
         }
         if (object.length < indice) {
             object = new Object[indice];
-
-            iterador = this.cabeza;
-            int indicedos = 0;
-
-            while (iterador != null) {
-                object[indicedos] = iterador.dato;
-                indicedos = indicedos + 1;
-                iterador = iterador.siguiente;
-            }
-
-            return object;
-
         }
-        return null;
+        iterador = this.cabeza;
+        int indicedos = 0;
+        while (iterador != null) {
+            object[indicedos] = iterador.dato;
+            indicedos = indicedos + 1;
+            iterador = iterador.siguiente;
+        }
+        return object;
     }
+
 
     @Override
     public Object getBeforeTo() {
         //no se realiza
         return null;
     }
-
     @Override
     public Object getBeforeTo(ListNode node) {
-        ListNode before = this.cabeza;
-        ListNode iterador = this.cabeza.siguiente;
-
-        if (node == this.cabeza) {
+        if (this.cabeza == null || node == this.cabeza) {
             return null;
         }
-
-
+        ListNode before = this.cabeza;
+        ListNode iterador = this.cabeza.siguiente;
         while (iterador != null) {
             if (node == iterador) {
                 return before;
@@ -287,8 +285,6 @@ public class MiLista implements ListInterface {
             iterador = iterador.siguiente;
             before = before.siguiente;
         }
-
-
 
         return null;
     }
@@ -304,29 +300,55 @@ public class MiLista implements ListInterface {
     @Override
     public Object getNextTo(ListNode node) {
         ListNode iterador = this.cabeza;
-        ListNode next = this.cabeza.siguiente;
-
         while (iterador != null) {
             if (node == iterador) {
-                return next;
+                return iterador.siguiente;
             }
             iterador = iterador.siguiente;
-            next = next.siguiente;
         }
-
         return null;
-
     }
 
     @Override
     public MiLista subList(ListNode from, ListNode to) {
-        return null;
+        ListNode iterador = this.cabeza;
+        MiLista sublista = new MiLista();
+        while (iterador != null) {
+            if (from == iterador) {
+                while (iterador != to.siguiente) {
+                    sublista.insertTail(iterador.dato);
+                    iterador = iterador.siguiente;
+                }
+                break;
+            }
+            iterador = iterador.siguiente;
+        }
+        return sublista;
     }
+
+
+
 
     @Override
     public MiLista sortList() {
-        return null;
+        ListNode actual = this.cabeza;
+        while (actual != null) {
+            ListNode menor = actual;
+            ListNode iterador = actual.siguiente;
+            while (iterador != null) {
+                if (((Comparable) iterador.dato).compareTo(menor.dato) < 0) {
+                    menor = iterador;
+                }
+                iterador = iterador.siguiente;
+            }
+            Object temporal = actual.dato;
+            actual.dato = menor.dato;
+            menor.dato = temporal;
+            actual = actual.siguiente;
+        }
+        return this;
     }
+
 
     @Override
     public String toString() {
